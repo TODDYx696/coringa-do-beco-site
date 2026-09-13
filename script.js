@@ -109,3 +109,93 @@ mobileStyle.textContent=`
 }
 `;
 document.head.appendChild(mobileStyle);
+
+/* A TOCA template data */
+const TOCA_WA = '5514998081793';
+const TOCA_PHONE = '(14) 99808-1793';
+const TOCA_ADDRESS = 'R. Prof. Torres Homem, 34';
+const TOCA_CITY = 'Boqueirão, Santos - SP';
+const TOCA_CEP = '11025-020';
+const TOCA_WA_URL = `https://wa.me/${TOCA_WA}`;
+const TOCA_MAP_SEARCH = 'https://www.google.com/maps/search/?api=1&query=R.+Prof.+Torres+Homem,+34+-+Boqueirão,+Santos+-+SP,+11025-020';
+
+function adaptToToca(){
+  document.title = 'A TOCA | Hamburgueria em Santos — Boqueirão';
+  const description = document.querySelector('meta[name="description"]');
+  if(description) description.setAttribute('content','A TOCA — hamburgueria no Boqueirão, Santos. Cardápio e pedidos pelo WhatsApp.');
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  if(ogTitle) ogTitle.setAttribute('content','A TOCA | Hamburgueria em Santos');
+  const ogDescription = document.querySelector('meta[property="og:description"]');
+  if(ogDescription) ogDescription.setAttribute('content','Hamburgueria no Boqueirão, Santos. Faça seu pedido pelo WhatsApp.');
+
+  document.querySelectorAll('.brand').forEach(el=>{
+    const spans=el.querySelectorAll('span');
+    if(spans.length>=2) spans[1].innerHTML='A TOCA';
+    el.setAttribute('aria-label','A TOCA - início');
+  });
+  document.querySelectorAll('.footer-brand strong').forEach(el=>el.innerHTML='A TOCA');
+
+  const heroEyebrow=document.querySelector('.hero .eyebrow');
+  if(heroEyebrow) heroEyebrow.innerHTML='<span></span> Boqueirão · Santos';
+  const heroTitle=document.querySelector('.hero h1');
+  if(heroTitle) heroTitle.innerHTML='A TOCA';
+  const heroCopy=document.querySelector('.hero-copy');
+  if(heroCopy) heroCopy.textContent='Lanches, hambúrgueres e clássicos no Boqueirão. Peça pelo WhatsApp.';
+  const placePill=document.querySelector('.place-pill');
+  if(placePill) placePill.textContent='📍 Boqueirão · Santos';
+
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(a=>{
+    const text=a.textContent.trim().toLowerCase();
+    let message='Oi! Vim pelo site da A TOCA e gostaria de fazer um pedido.';
+    if(text.includes('instagram')) return;
+    a.href=`${TOCA_WA_URL}?text=${encodeURIComponent(message)}`;
+  });
+
+  const aboutEyebrow=document.querySelector('.about .eyebrow');
+  if(aboutEyebrow) aboutEyebrow.innerHTML='<span></span> A TOCA';
+  const aboutTitle=document.querySelector('.about h2');
+  if(aboutTitle) aboutTitle.innerHTML='NO<br><em>BOQUEIRÃO.</em>';
+  const aboutParagraphs=document.querySelectorAll('.about-copy > p');
+  if(aboutParagraphs[1]) aboutParagraphs[1].textContent='Uma hamburgueria no Boqueirão, em Santos, com lanches para pedir e aproveitar.';
+  if(aboutParagraphs[2]) aboutParagraphs[2].textContent='Consulte o cardápio e faça seu pedido pelo WhatsApp.';
+
+  const locationEyebrow=document.querySelector('.location .eyebrow');
+  if(locationEyebrow) locationEyebrow.innerHTML='<span></span> Onde estamos';
+  const locationTitle=document.querySelector('.location h2');
+  if(locationTitle) locationTitle.innerHTML='VEM PRA<br><em>A TOCA.</em>';
+  const address=document.querySelector('.location address');
+  if(address) address.innerHTML=`${TOCA_ADDRESS}<br>${TOCA_CITY}<br>${TOCA_CEP}`;
+  const map=document.querySelector('.map iframe');
+  if(map){
+    map.title='Mapa da A TOCA';
+    map.src='https://www.google.com/maps?q=R.%20Prof.%20Torres%20Homem%2C%2034%20-%20Boqueir%C3%A3o%2C%20Santos%20-%20SP%2C%2011025-020&output=embed';
+  }
+  const mapsLink=document.querySelector('.location .btn.primary');
+  if(mapsLink) mapsLink.href=TOCA_MAP_SEARCH;
+
+  const footerCols=document.querySelectorAll('footer > div');
+  if(footerCols[3]){
+    const p=footerCols[3].querySelector('p');
+    if(p) p.innerHTML=`${TOCA_ADDRESS}<br>${TOCA_CITY}`;
+  }
+  const footerContact=Array.from(document.querySelectorAll('footer a')).find(a=>a.textContent.trim()==='WhatsApp');
+  if(footerContact) footerContact.href=TOCA_WA_URL;
+  const copyright=document.querySelector('.copyright');
+  if(copyright) copyright.innerHTML='© <span id="year"></span> A TOCA. Todos os direitos reservados.';
+  const year2=document.getElementById('year');
+  if(year2) year2.textContent=new Date().getFullYear();
+
+  const schema=document.querySelector('script[type="application/ld+json"]');
+  if(schema){
+    schema.textContent=JSON.stringify({
+      '@context':'https://schema.org',
+      '@type':'Restaurant',
+      name:'A TOCA',
+      servesCuisine:'Hamburgueria',
+      telephone:'+55 14 99808-1793',
+      address:{'@type':'PostalAddress',streetAddress:TOCA_ADDRESS,addressLocality:'Santos',addressRegion:'SP',postalCode:TOCA_CEP,addressCountry:'BR'}
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded',adaptToToca);
